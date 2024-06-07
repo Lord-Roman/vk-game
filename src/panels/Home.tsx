@@ -61,14 +61,70 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
 		console.log("commits: ",commits)
 	}
 
-  function randomInteger(min:number, max:number) {
+  function randomInteger(min:number, max:number):number {
 		let rand = min - 0.5 + Math.random() * (max - min + 1);
 		return Math.round(rand);
 	}
 	function getRoll(){
 		return randomInteger(1,10) + randomInteger(1,10);
 	}
+  class Unit{
+    name: string;
+    might: number;
+    armor: number;
+    speed: number;
+    initiative: number;
+    team:boolean;
+    constructor(name:string) {
+      this.name = name;
+      this.might =  0;
+      this.armor = 10;
+      this.speed =  0;
+      this.initiative =  0;
+      this.team = false;
+    }
+    battleTurn(attaker:any){
+      let roll = getRoll() + attaker.might;
+      // console.log(this.name, 'defeat roll: ', roll);
+      // console.log(this.name, ': ', this);
+      return roll;
+    }
+  }
 
+  class Hero extends Unit {
+    loyalty: number;
+    courage: number;
+    constructor(name:string = 'Hero'){
+      super(name);
+      this.courage = 5;
+      this.loyalty = 5;
+      this.team = true;
+    }
+    battleTurn(attaker:any){
+      let roll = super.battleTurn(attaker);
+      if(roll >= 20){
+        return this;
+      }else if(roll > this.armor){
+        this.courage--;
+        if(getRoll() - 10 > this.courage){
+          console.log("It's time to run");
+          return this;
+        }
+      }
+    }
+  }
+
+  class Enemy extends Unit {
+    constructor(name:string = 'Enemy'){
+      super(name);
+    }
+    battleTurn(attaker:any){
+      let roll = super.battleTurn(attaker);
+      if(roll > this.armor){
+        return this;
+      }
+    }
+  }
 
   const myFunc = (e:any) =>{
     const user = { tableName:'Lord' }
@@ -76,61 +132,14 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
 		// loadGoogle({tableName:'Lord', name:'herbs1'});
     
 
-    class Unit{
-      name: string;
-      might: number;
-      armor: number;
-      speed: number;
-      constructor(name:string) {
-        this.name = name;
-        this.might =  0;
-        this.armor = 10;
-        this.speed =  0;
-      }
-      battleTurn(attaker:any){
-        let roll = getRoll() + attaker.might;
-        console.log(this.name, 'defeat roll: ', roll);
-        console.log(this.name, ': ', this);
-        return roll;
-      }
-    }
 
-    class Hero extends Unit {
-      loyalty: number;
-      courage: number;
-      constructor(name:string = 'Hero'){
-        super(name);
-        this.courage = 5;
-        this.loyalty = 5;
-      }
-      battleTurn(attaker:any){
-        let roll = super.battleTurn(attaker);
-        if(roll >= 20){
-          return this;
-        }else if(roll > this.armor){
-          this.courage--;
-          if(getRoll() - 10 > this.courage){
-            console.log("It's time to run");
-            return this;
-          }
-        }
-      }
-    }
-
-    class Enemy extends Unit {
-      constructor(name:string = 'Enemy'){
-        super(name);
-      }
-      battleTurn(attaker:any){
-        let roll = super.battleTurn(attaker);
-        if(roll > this.armor){
-          return this;
-        }
-      }
-    }
 
     let hero = new Hero();
-    let enemy = new Enemy();
+    let enemy1 = new Enemy('enemy1');
+    let enemy2 = new Enemy('enemy2');
+    let enemy3 = new Enemy('enemy3');
+
+
 
     const party:any[] = [];
     const band:any[] = [];
@@ -138,27 +147,68 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
     //Пока передняя линия стоит задняя не может быть атакована
     //Лидер вступает в бой, только если первая и вторая линия убиты или бежали
     party.push(hero);
-    band.push(enemy);
+    band.push(enemy1);
+    band.push(enemy2);
+    band.push(enemy3);
+
+
+    let turnOrder:any[] = [];
+    
+    // let turnOrderDivided:{Enemy:number[],Hero:number[]} = {
+    //   "Enemy": [],
+    //   "Hero": [],
+    // };
+
+    // type tName = 'Enemy'|'Hero';
+    
+    
+    party.forEach(unit => {
+      unit.initiative = getRoll() + unit.speed;
+      turnOrder.push(unit);
+    });
+    band.forEach(unit => {
+      unit.initiative = getRoll() + unit.speed;
+      turnOrder.push(unit);
+    });
+
+    turnOrder.sort( (a,b)=>a.initiative - b.initiative);
+    console.log("turnOrder: ", turnOrder);
+
+    // turnOrder.forEach( (a, index) => {
+    //   let name:tName = a.constructor.name
+    //   console.log(name);
+    //   turnOrderDivided[name].push(index);
+    // });
+    // console.log("turnOrderDivided Enemy: ", turnOrderDivided.Enemy);
+    // console.log("turnOrderDivided Hero: ", turnOrderDivided.Hero);
+    
     console.log('-----------------------------------');
-    while(party.length && band.length){
+    while(band.length && party.length){
 
-      
-      party.forEach(unit => {
-        let index = 0;
-        let a = band[index].battleTurn(unit);
-        if(a){
-          band.splice(index, 1)
+      for (let i = 0; i < turnOrder.length && band.length && party.length; i++) {
+        const element = turnOrder[i];
+        
+        let index:number = -1;
+        let defender;
+        
+        if(element.team){
+          index = randomInteger(0, (band.length - 1));
+          defender = band[index];
+          let unit = defender.battleTurn(element)
+          if(unit){
+            band.splice(index, 1);
+            turnOrder.splice(turnOrder.indexOf(unit),1);
+          }
+        }else{
+          index = randomInteger(0, (party.length - 1));
+          defender = party[index];
+          let unit = defender.battleTurn(element)
+          if(unit){
+            party.splice(index, 1);
+            turnOrder.splice(turnOrder.indexOf(unit),1);
+          }
         }
-      });
-
-      band.forEach(unit => {
-        let index = 0;
-        let a = party[index].battleTurn(unit);
-        if(a){
-          party.splice(index, 1)
-        }
-      });
-      
+      }
     }
 
     if(!band.length){

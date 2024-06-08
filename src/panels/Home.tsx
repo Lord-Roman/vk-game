@@ -24,6 +24,9 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
   const { photo_200, city, first_name, last_name } = { ...fetchedUser };
   const routeNavigator = useRouteNavigator();
 	const [buttonText, setButtonText] = useState('Покажите Персика, пожалуйста');
+	const [turn, setTurn] = useState(0);
+	const [log, setlog] = useState<string[]>([]);
+
 
   const myFunc = (e:any) =>{
     if(fetchedUser){
@@ -45,11 +48,9 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
     //Лидер вступает в бой, только если первая и вторая линия убиты или бежали
     party.push(hero1);
     party.push(hero2);
-
     band.push(enemy1);
     band.push(enemy2);
     band.push(enemy3);
-
 
     let turnOrder:any[] = [];
     
@@ -63,9 +64,13 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
     });
 
     turnOrder.sort( (a,b)=>a.initiative - b.initiative);
-
+    // setTurn(0);
+    let turn = 0;
+    let turnLog:string[] = [];
     console.log('-----------------------------------');
     while(band.length && party.length){
+      turn++;
+      turnLog[turn] = `ход: ${turn}`;
 
       for (let i = 0; i < turnOrder.length && band.length && party.length; i++) {
         const element = turnOrder[i];
@@ -92,7 +97,7 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
         }
       }
     }
-
+    setlog(turnLog);
     if(!band.length){
       setButtonText('Ура победа');
     }else{
@@ -112,7 +117,7 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
       )}
       <Group header={<Header mode="secondary">Что происходит:</Header>}>
         <Div>
-
+          <ul>{log.map(turn => <li>{turn}</li>)}</ul>
         </Div>
         <Div>
           <Button stretched size="l" mode="secondary" onClick={myFunc}>

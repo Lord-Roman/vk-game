@@ -1,23 +1,31 @@
 import { getRoll } from "./rolls";
 
+export interface iUnit{
+  id:string;
+  name: string;
+  might: number;
+  armor: number;
+  speed: number;
+  initiative: number;
+  team:boolean;
+}
+
 class Unit{
+    id:string;
     name: string;
-    might: number;
-    armor: number;
-    speed: number;
-    initiative: number;
-    team:boolean;
-    constructor(name:string) {
-      this.name = name;
-      this.might =  0;
-      this.armor = 10;
-      this.speed =  0;
-      this.initiative =  0;
-      this.team = false;
-    }
+    might: number = 0;
+    armor: number = 10;
+    speed: number = 0;
+    initiative: number = 0;
+    team:boolean = false;
     battleTurn(attaker:any){
       let roll = getRoll() + attaker.might;
       return roll;
+    }
+    constructor(name:string) {
+      // this.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+      this.id = Math.random().toString(16).slice(2);
+      this.name = name;
     }
   }
 

@@ -1,0 +1,17 @@
+<svg width="100" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Определение линейного градиента для заливки -->
+  <defs>
+    <linearGradient id="tallGrassGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:rgb(0,100,0);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(0,200,0);stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+  <!-- Высокая и слегка согнутая травинка с градиентной заливкой -->
+  <path d="M10 180 Q 20 10 30 180" stroke="url(#tallGrassGradient)" fill="url(#tallGrassGradient)"/>
+  <!-- Дополнительные острые линии для детализации -->
+  <path d="M10 180 Q 20 90 15 180" stroke="url(#tallGrassGradient)" fill="transparent" opacity="0.9"/>
+  <path d="M25 180 Q 20 90 30 180" stroke="url(#tallGrassGradient)" fill="transparent" opacity="0.9"/>
+  <!-- Более тонкие линии для создания остроты -->
+  <path d="M10 180 Q 20 80 14 180" stroke="url(#tallGrassGradient)" stroke-width="0.5" fill="transparent" opacity="0.8"/>
+  <path d="M26 180 Q 20 80 30 180" stroke="url(#tallGrassGradient)" stroke-width="0.5" fill="transparent" opacity="0.8"/>
+</svg>

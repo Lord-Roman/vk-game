@@ -13,6 +13,8 @@ import {
 import { UserInfo } from '@vkontakte/vk-bridge';
 // import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import '../styles/main.scss';
+// import grassTile from  '../assets/grass.svg'
+
 
 import { getRoll, randomInteger } from '../components/rolls';
 import { Hero, Enemy, iUnit } from '../components/unitHelper';
@@ -25,7 +27,7 @@ export interface HomeProps extends NavIdProps {
 export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
   // const { photo_200, city, first_name, last_name } = { ...fetchedUser };
   // const routeNavigator = useRouteNavigator();
-	const [buttonText, setButtonText] = useState('Покажите Персика, пожалуйста');
+	const [buttonText, setButtonText] = useState('Начать битву');
 	// const [turn, setTurn] = useState(0);
 	const [combatlog, setCombatLog] = useState<any[]>([]);
 
@@ -68,7 +70,7 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
     turnOrder.sort( (a,b)=>a.initiative - b.initiative);
     // setTurn(0);
     let turn = 0;
-    let turnLog:any[] = [{"name":'Начало', "party":JSON.parse(JSON.stringify(party)), "band":JSON.parse(JSON.stringify(band)) }];
+    let turnLog:any[] = [{"name":'', "party":JSON.parse(JSON.stringify(party)), "band":JSON.parse(JSON.stringify(band)) }];
     console.log('-----------------------------------');
     while(band.length && party.length){
       turn++;
@@ -126,7 +128,7 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
             {buttonText}
           </Button>
         </Div>
-        <Div>
+        <Div className='combatLog'>
           <ul>
             {combatlog.map(turn =>
               { return (

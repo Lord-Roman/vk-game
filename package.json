@@ -18,7 +18,9 @@
     "@vkontakte/vk-mini-apps-router": "^1.4.2",
     "@vkontakte/vkui": "^6.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "xhr2": "^0.2.1",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

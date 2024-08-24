@@ -43,13 +43,11 @@ export const Home: FC<HomeProps> = ({ id, fetchedUser }) => {
     let hero2 = new Hero('Одисей');
     let enemy1 = new Enemy('Гоблин Моблин');
     let enemy2 = new Enemy('Гоблин Боблин');
-    let enemy3 = new Enemy('Гоблин Арарог Великий');
+    let enemy3 = new Enemy('Гоблин Арагог Великий');
 
     const party:any[] = [];
     const band:any[] = [];
-    //Было бы круто делить войска на линии. Первая линия получает урон. Вторая наносит урон. Третья линия поддержки. Лидер в стороне
-    //Пока передняя линия стоит задняя не может быть атакована
-    //Лидер вступает в бой, только если первая и вторая линия убиты или бежали
+
     party.push(hero1);
     party.push(hero2);
     band.push(enemy1);
